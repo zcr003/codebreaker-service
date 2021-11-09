@@ -1,4 +1,11 @@
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
+          client-id: 235584906129-8l5rpbper0vne53491a8be2pdiadmn16.apps.googleusercontent.com
+
   datasource:
     url: jdbc:h2:file:./db/codebreaker
   jpa:
@@ -6,7 +13,8 @@ spring:
     hibernate:
       ddl-auto: update
 
-#
+# Enable these lines only for DDL Generation
+
 #    properties:
 #      javax:
 #        persistence:
