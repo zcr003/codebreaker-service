@@ -73,4 +73,10 @@ private final UserRepository repository;
       .getPrincipal();
   }
 
+  public User update(User updateUser, User user) {
+  if (updateUser.getDisplayName() != null) {
+    user.setDisplayName(updateUser.getDisplayName());
+    }
+    return save(user);
+  }
 }

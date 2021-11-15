@@ -1,5 +1,8 @@
 package edu.cnm.deepdive.codebreaker.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,9 +35,11 @@ public class User {
   @Id
   @GeneratedValue
   @Column(name = "user_id", updatable = false, columnDefinition = "UUID")
+  @JsonIgnore
   private UUID id;
 
   @Column(updatable = false, nullable = false, unique = true, columnDefinition = "UUID")
+  @JsonProperty(value = "id", access = Access.READ_ONLY)
   private UUID externalKey = UUID.randomUUID();
 
   @CreationTimestamp
@@ -43,16 +48,20 @@ public class User {
   private Date created;
 
   @Column(nullable = false, updatable = false, unique = true, length = 30)
+  @JsonIgnore
   private String oauthKey;
 
   @Column(nullable = false, updatable = true, unique = true, length = 100)
   private String displayName;
 
+  //This private field is only saying games has to point at one list. We can change/add to the items of the list.
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,
       cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy("created DESC")
-  //This private field is only saying games has to point at one list. We can change/add to the items of the list.
+  @JsonIgnore
   private final List<Game> games = new LinkedList<>();
+
+  //Getters and setters
   public UUID getId() {
     return id;
   }
