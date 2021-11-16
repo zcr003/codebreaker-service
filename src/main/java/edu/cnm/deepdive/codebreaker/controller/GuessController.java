@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.codebreaker.controller;
 
+import edu.cnm.deepdive.codebreaker.model.entity.Game;
 import edu.cnm.deepdive.codebreaker.model.entity.Guess;
 import edu.cnm.deepdive.codebreaker.service.GameService;
 import edu.cnm.deepdive.codebreaker.service.UserService;
@@ -40,4 +41,11 @@ public class GuessController {
   }
 
 
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public Iterable<Guess> get(@PathVariable UUID gameKey) {
+  return gameService
+      .get(gameKey, userService.getCurrentUser())
+      .map(Game::getGuesses)
+      .orElseThrow();
+  }
 }
