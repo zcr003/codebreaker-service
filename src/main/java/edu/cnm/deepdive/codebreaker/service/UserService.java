@@ -73,6 +73,13 @@ private final UserRepository repository;
       .getPrincipal();
   }
 
+  /**
+   * Updates the current user records from the provided updated user record, and saves the result to the database.
+   *
+   * @param updateUser User deserialized from body of request.
+   * @param user Current requestor.
+   * @return Updated user instance.
+   */
   public User update(User updateUser, User user) {
   if (updateUser.getDisplayName() != null) {
     user.setDisplayName(updateUser.getDisplayName());
