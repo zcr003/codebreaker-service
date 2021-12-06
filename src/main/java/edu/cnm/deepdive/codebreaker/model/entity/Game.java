@@ -107,7 +107,7 @@ public class Game {
     this.pool = pool;
   }
 
-  public int getPoolSize(int length) {
+  public int getPoolSize() {
     return poolSize;
   }
 

@@ -50,7 +50,7 @@ public class GameService {
     game.setUser(user);
     game.setPool(new String(codePoints, 0, codePoints.length));
     game.setText(code);
-    game.getPoolSize(codePoints.length);
+    game.setPoolSize(codePoints.length);
     return gameRepository.save(game);
   }
 
@@ -132,7 +132,7 @@ public class GameService {
     return pool
         .codePoints()
         .peek((codePoint) -> {
-          if (!Character.isDefined(codePoint) || Character.isWhitespace(codePoint)) {
+          if (!Character.isDefined(codePoint)) {
             throw new IllegalArgumentException(
                 String.format("Undefined Character in Pool: %d", codePoint));
           } else if (Character.isWhitespace(codePoint)) {

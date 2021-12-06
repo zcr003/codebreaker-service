@@ -1,25 +1,17 @@
 package edu.cnm.deepdive.codebreaker.model.dao;
 
 import edu.cnm.deepdive.codebreaker.model.entity.User;
+import edu.cnm.deepdive.codebreaker.view.ScoreSummary;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-//Like our Daos but already knows how to do most of things we defined in our Personal Projects.
+//Like our Daos but already knows how to do most of the things we defined in our Personal Projects.
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-  Optional<User> findByOauthKey(String oauthKey);
-
-  Optional<User> findByExternalKey(UUID externalKey);
-
-
-  Iterable<User> getAllByOrderByDisplayNameAsc();
-
-  @Query(
-      value =
-        "SELECT"
-      + "     u.user_id, "
+  String RANKING_STATISTICS_QUERY = "SELECT"
+      + "     u.user_id AS userId, "
       + "     u.display_name AS displayName, "
       + "     u.external_key AS externalKey, "
       + "     gs.averageGuessCount, "
@@ -45,23 +37,25 @@ public interface UserRepository extends JpaRepository<User, UUID> {
       + "    g.length = :length "
       + "    AND g.pool_size = :poolSize "
       + "    AND gu.match_count = g.length "
-      + "  GROUP BY g.user_id"
-      + ") AS gs ON gs.user_id = u.user_id ",
-            nativeQuery = true
-  )
+      + "  GROUP BY g.user_id "
+      + ") AS gs ON gs.user_id = u.user_id ";
 
-  Iterable<ScoreSummary> getScoreSummaries(int length, int poolSize);
+  Optional<User> findByOauthKey(String oauthKey);
 
-  interface ScoreSummary {
+  Optional<User> findByExternalKey(UUID externalKey);
 
-    String getDisplayName();
 
-    UUID getExternalKey();
+  Iterable<User> getAllByOrderByDisplayNameAsc();
 
-    double getAverageGuessCount();
+  @Query(value = RANKING_STATISTICS_QUERY + "ORDER BY averageGuessCount ASC, averageTime ASC",
+      nativeQuery = true)
+  Iterable<ScoreSummary> getScoreSummariesOrderByGuessCount(int length, int poolSize);
 
-    long getAverageTime();
-  }
+  @Query(value = RANKING_STATISTICS_QUERY + "ORDER BY averageTime ASC, averageGuessCount ASC",
+      nativeQuery = true)
+  Iterable<ScoreSummary> getScoreSummariesOrderByTime(int length, int poolSize);
+
+
 }
 
 
